@@ -11,6 +11,7 @@
     --err: #c62828;
     --prot: #1976d2;
     --grass: #ef6c00;
+    --carb: #6d4c41;
 }
 * { box-sizing: border-box; }
 body {
@@ -121,6 +122,7 @@ button {
 .stat.kcal .stat-val { color: var(--accent); }
 .stat.prot .stat-val { color: var(--prot); }
 .stat.grass .stat-val { color: var(--grass); }
+.stat.carb .stat-val { color: var(--carb); }
 .meal-group {
     margin-bottom: 1rem;
     border: 1px solid var(--border);
@@ -159,6 +161,7 @@ button {
 .meal-macros .m-kcal { color: var(--accent); }
 .meal-macros .m-prot { color: var(--prot); }
 .meal-macros .m-grass { color: var(--grass); }
+.meal-macros .m-carb { color: var(--carb); }
 .meal-right { text-align: right; }
 .empty { text-align: center; padding: 2rem 1rem; color: var(--muted); font-style: italic; }
 .nav-day {
@@ -308,7 +311,7 @@ main.gestisci {
 }
 .alim-row {
     display: grid;
-    grid-template-columns: 1fr 80px 80px 80px 160px;
+    grid-template-columns: 1fr 70px 70px 70px 70px 150px;
     gap: .5rem;
     align-items: center;
     padding: .35rem 0;
@@ -374,6 +377,7 @@ main.gestisci {
     .alim-row > div:nth-of-type(2)::before { content: 'kcal'; }
     .alim-row > div:nth-of-type(3)::before { content: 'prot'; }
     .alim-row > div:nth-of-type(4)::before { content: 'grassi'; }
+    .alim-row > div:nth-of-type(5)::before { content: 'carb'; }
     .alim-row .row-actions { grid-column: 1 / -1; justify-content: flex-end; }
     .alim-row .num { text-align: left; }
     .alim-row .num input { text-align: left; }

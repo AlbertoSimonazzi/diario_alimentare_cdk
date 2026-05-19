@@ -54,11 +54,12 @@ usort($voci_giorno, function ($a, $b) {
     return ($ord[$a['pasto']] ?? 99) <=> ($ord[$b['pasto']] ?? 99);
 });
 
-$tot_kcal = 0; $tot_prot = 0.0; $tot_grass = 0.0;
+$tot_kcal = 0; $tot_prot = 0.0; $tot_grass = 0.0; $tot_carb = 0.0;
 foreach ($voci_giorno as $v) {
     $tot_kcal  += (int)($v['kcal'] ?? 0);
     $tot_prot  += (float)($v['proteine'] ?? 0);
     $tot_grass += (float)($v['grassi'] ?? 0);
+    $tot_carb  += (float)($v['carboidrati'] ?? 0);
 }
 $rapporto_pg = $tot_grass > 0 ? round($tot_prot / $tot_grass, 2) : null;
 ?>
@@ -121,6 +122,10 @@ $rapporto_pg = $tot_grass > 0 ? round($tot_prot / $tot_grass, 2) : null;
                 <div class="stat-val"><?= $tot_grass ? rtrim(rtrim(number_format($tot_grass, 1, '.', ''), '0'), '.') : '—' ?></div>
                 <div class="stat-lbl">g grassi</div>
             </div>
+            <div class="stat carb">
+                <div class="stat-val"><?= $tot_carb ? rtrim(rtrim(number_format($tot_carb, 1, '.', ''), '0'), '.') : '—' ?></div>
+                <div class="stat-lbl">g carb</div>
+            </div>
             <div class="stat">
                 <div class="stat-val"><?= $rapporto_pg !== null ? number_format($rapporto_pg, 2, '.', '') : '—' ?></div>
                 <div class="stat-lbl">P / G</div>
@@ -145,6 +150,7 @@ $rapporto_pg = $tot_grass > 0 ? round($tot_prot / $tot_grass, 2) : null;
                     $kcal_pasto  = array_sum(array_map(fn($v) => (int)($v['kcal'] ?? 0), $raggruppati[$p]));
                     $prot_pasto  = array_sum(array_map(fn($v) => (float)($v['proteine'] ?? 0), $raggruppati[$p]));
                     $grass_pasto = array_sum(array_map(fn($v) => (float)($v['grassi'] ?? 0), $raggruppati[$p]));
+                    $carb_pasto  = array_sum(array_map(fn($v) => (float)($v['carboidrati'] ?? 0), $raggruppati[$p]));
                 ?>
                 <div class="meal-group">
                     <div class="meal-header">
@@ -152,7 +158,8 @@ $rapporto_pg = $tot_grass > 0 ? round($tot_prot / $tot_grass, 2) : null;
                         <span style="font-weight:400;font-size:.8rem;color:var(--muted)">
                             <?= $kcal_pasto ?> kcal ·
                             <?= number_format($prot_pasto, 1, '.', '') ?>P ·
-                            <?= number_format($grass_pasto, 1, '.', '') ?>G
+                            <?= number_format($grass_pasto, 1, '.', '') ?>G ·
+                            <?= number_format($carb_pasto, 1, '.', '') ?>C
                         </span>
                     </div>
                     <?php foreach ($raggruppati[$p] as $v): ?>
@@ -167,6 +174,7 @@ $rapporto_pg = $tot_grass > 0 ? round($tot_prot / $tot_grass, 2) : null;
                                     <span class="m-kcal"><?= (int)($v['kcal'] ?? 0) ?> kcal</span>
                                     <span class="m-prot"><?= number_format((float)($v['proteine'] ?? 0), 1, '.', '') ?> P</span>
                                     <span class="m-grass"><?= number_format((float)($v['grassi'] ?? 0), 1, '.', '') ?> G</span>
+                                    <span class="m-carb"><?= number_format((float)($v['carboidrati'] ?? 0), 1, '.', '') ?> C</span>
                                 </div>
                                 <?php if (!empty($v['note'])): ?>
                                     <p class="meal-notes"><?= htmlspecialchars($v['note'], ENT_QUOTES) ?></p>

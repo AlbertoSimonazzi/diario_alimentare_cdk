@@ -49,17 +49,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['azione'] ?? '') === 'aggiu
     } else {
         $fattore = $grammi / 100.0;
         $voce = [
-            'id'        => bin2hex(random_bytes(6)),
-            'data'      => $data_in,
-            'pasto'     => $pasto,
-            'categoria' => $categoria,
-            'alimento'  => $alimento,
-            'grammi'    => round($grammi, 1),
-            'kcal'      => (int)round($info['kcal'] * $fattore),
-            'proteine'  => round($info['p'] * $fattore, 1),
-            'grassi'    => round($info['g'] * $fattore, 1),
-            'note'      => trim((string)($_POST['note'] ?? '')),
-            'creato_il' => date('c'),
+            'id'           => bin2hex(random_bytes(6)),
+            'data'         => $data_in,
+            'pasto'        => $pasto,
+            'categoria'    => $categoria,
+            'alimento'     => $alimento,
+            'grammi'       => round($grammi, 1),
+            'kcal'         => (int)round($info['kcal'] * $fattore),
+            'proteine'     => round($info['p'] * $fattore, 1),
+            'grassi'       => round($info['g'] * $fattore, 1),
+            'carboidrati'  => round(($info['c'] ?? 0) * $fattore, 1),
+            'note'         => trim((string)($_POST['note'] ?? '')),
+            'creato_il'    => date('c'),
         ];
         $dati = carica_dati();
         $dati[] = $voce;
@@ -141,7 +142,8 @@ $libreria_json = json_encode($LIBRERIA, JSON_UNESCAPED_UNICODE);
             <div class="preview" id="preview">
                 <b>Valori stimati:</b> <span id="prev-kcal">—</span> kcal ·
                 <span id="prev-prot">—</span> g prot ·
-                <span id="prev-grass">—</span> g grassi
+                <span id="prev-grass">—</span> g grassi ·
+                <span id="prev-carb">—</span> g carb
             </div>
 
             <label for="note">Note (opzionale)</label>
@@ -165,6 +167,7 @@ const preview      = document.getElementById('preview');
 const prevKcal     = document.getElementById('prev-kcal');
 const prevProt     = document.getElementById('prev-prot');
 const prevGrass    = document.getElementById('prev-grass');
+const prevCarb     = document.getElementById('prev-carb');
 
 function popolaAlimenti() {
     const cat = selCategoria.value;
@@ -205,6 +208,7 @@ function aggiornaAnteprima() {
     prevKcal.textContent  = Math.round(info.kcal * f);
     prevProt.textContent  = (info.p * f).toFixed(1);
     prevGrass.textContent = (info.g * f).toFixed(1);
+    prevCarb.textContent  = ((info.c || 0) * f).toFixed(1);
     preview.classList.add('visible');
 }
 

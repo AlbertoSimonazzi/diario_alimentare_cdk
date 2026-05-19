@@ -76,19 +76,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $kcal = valida_macro($_POST['kcal'] ?? '');
         $p    = valida_macro($_POST['p'] ?? '');
         $g    = valida_macro($_POST['g'] ?? '');
+        $c    = valida_macro($_POST['c'] ?? '');
         if (!isset($LIBRERIA[$cat])) {
             redirect_msg('Categoria non trovata.', 'errore');
         }
         if ($nome === '') {
             redirect_msg('Nome alimento mancante.', 'errore', $cat);
         }
-        if ($kcal === null || $p === null || $g === null) {
-            redirect_msg('Tutti i valori (kcal, proteine, grassi) devono essere numeri ≥ 0.', 'errore', $cat);
+        if ($kcal === null || $p === null || $g === null || $c === null) {
+            redirect_msg('Tutti i valori (kcal, proteine, grassi, carboidrati) devono essere numeri ≥ 0.', 'errore', $cat);
         }
         if (isset($LIBRERIA[$cat][$nome])) {
             redirect_msg('Alimento già presente in questa categoria.', 'errore', $cat);
         }
-        $LIBRERIA[$cat][$nome] = ['kcal' => (int)round($kcal), 'p' => $p, 'g' => $g];
+        $LIBRERIA[$cat][$nome] = ['kcal' => (int)round($kcal), 'p' => $p, 'g' => $g, 'c' => $c];
         salva_libreria($LIBRERIA);
         redirect_msg('Alimento "' . $nome . '" aggiunto.', 'ok', $cat);
     }
@@ -100,13 +101,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $kcal = valida_macro($_POST['kcal'] ?? '');
         $p    = valida_macro($_POST['p'] ?? '');
         $g    = valida_macro($_POST['g'] ?? '');
+        $c    = valida_macro($_POST['c'] ?? '');
         if (!isset($LIBRERIA[$cat][$nome_orig])) {
             redirect_msg('Alimento non trovato.', 'errore', $cat);
         }
         if ($nome === '') {
             redirect_msg('Nome alimento mancante.', 'errore', $cat);
         }
-        if ($kcal === null || $p === null || $g === null) {
+        if ($kcal === null || $p === null || $g === null || $c === null) {
             redirect_msg('Tutti i valori devono essere numeri ≥ 0.', 'errore', $cat);
         }
         if ($nome !== $nome_orig && isset($LIBRERIA[$cat][$nome])) {
@@ -115,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $nuova = [];
         foreach ($LIBRERIA[$cat] as $k => $v) {
             if ($k === $nome_orig) {
-                $nuova[$nome] = ['kcal' => (int)round($kcal), 'p' => $p, 'g' => $g];
+                $nuova[$nome] = ['kcal' => (int)round($kcal), 'p' => $p, 'g' => $g, 'c' => $c];
             } else {
                 $nuova[$k] = $v;
             }
@@ -218,6 +220,7 @@ function h(string $s): string {
                         <div class="num">kcal</div>
                         <div class="num">prot</div>
                         <div class="num">grassi</div>
+                        <div class="num">carb</div>
                         <div>Azioni</div>
                     </div>
 
@@ -246,6 +249,7 @@ function h(string $s): string {
                                 <div class="num"><input form="<?= $form_id ?>" type="number" name="kcal" value="<?= h((string)($info['kcal'] ?? 0)) ?>" min="0" step="1" required></div>
                                 <div class="num"><input form="<?= $form_id ?>" type="number" name="p" value="<?= h((string)($info['p'] ?? 0)) ?>" min="0" step="0.1" required></div>
                                 <div class="num"><input form="<?= $form_id ?>" type="number" name="g" value="<?= h((string)($info['g'] ?? 0)) ?>" min="0" step="0.1" required></div>
+                                <div class="num"><input form="<?= $form_id ?>" type="number" name="c" value="<?= h((string)($info['c'] ?? 0)) ?>" min="0" step="0.1" required></div>
                                 <div class="row-actions">
                                     <button form="<?= $form_id ?>" type="submit">Salva</button>
                                     <button form="<?= $del_id ?>" type="submit" class="btn-del">Elimina</button>
@@ -263,6 +267,7 @@ function h(string $s): string {
                         <div class="num"><input form="<?= $add_id ?>" type="number" name="kcal" placeholder="kcal" min="0" step="1" required></div>
                         <div class="num"><input form="<?= $add_id ?>" type="number" name="p" placeholder="prot" min="0" step="0.1" required></div>
                         <div class="num"><input form="<?= $add_id ?>" type="number" name="g" placeholder="grassi" min="0" step="0.1" required></div>
+                        <div class="num"><input form="<?= $add_id ?>" type="number" name="c" placeholder="carb" min="0" step="0.1" required></div>
                         <div class="row-actions"><button form="<?= $add_id ?>" type="submit" class="btn-primary btn-small">Aggiungi</button></div>
                     </div>
                 </div>

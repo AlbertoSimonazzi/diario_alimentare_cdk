@@ -13,16 +13,20 @@ Italian-language **diario alimentare carnivoro** (carnivore-diet food diary). Pl
 
 ## Architecture
 
-Three source files plus a JSON data store:
+Three pages + a loader + a JSON store:
 
-- [index.php](index.php) — entire app: POST handler, page render, inline JS for the cascading category→food dropdown and live macro preview. Follows **POST-Redirect-GET**: every POST ends with `header('Location: ...')` so refresh never resubmits. Read this before changing form behavior.
-- [alimenti.php](alimenti.php) — pure-data: `return` of a nested array `[categoria => [nome => ['kcal' => N, 'p' => N, 'g' => N]]]` with **macros per 100 g**. The same structure is shipped to the browser via `json_encode($LIBRERIA)` and consumed by the inline JS — keys (`kcal`, `p`, `g`) and category/food names must match exactly between PHP and JS. To add foods, edit this file only; no other code change needed.
-- [style.css](style.css) — all styling. `index.php` has no `<style>` block.
-- `data/diario.json` — entry list, auto-created on first save by `salva_dati()`. Each entry stores its **computed** kcal/proteine/grassi (not just a reference to the library), so editing values in [alimenti.php](alimenti.php) never retroactively changes historical entries.
+- [index.php](index.php) — day view: lists entries grouped by `PASTI`, shows daily totals (kcal/proteine/grassi/carboidrati/P-G ratio) and a delete button per entry. Handles `azione=elimina` only. POST-Redirect-GET.
+- [nuova.php](nuova.php) — form to add a new entry. Loads `$LIBRERIA`, ships it to the browser as JSON for the cascading categoria→alimento dropdown and the live preview. Handles `azione=aggiungi`. On success redirects to `index.php?giorno=...`.
+- [gestisci.php](gestisci.php) — CRUD on categorie/alimenti (add/rename/delete category; add/edit/delete food). Each row of the library uses HTML5 `form="..."` attribute to share a non-nested form. POST-Redirect-GET.
+- [alimenti.php](alimenti.php) — thin loader: returns `json_decode` of `data/alimenti.json`. Also defines `salva_libreria()` used by `gestisci.php`. The returned array has shape `[categoria => [nome => ['kcal' => N, 'p' => N, 'g' => N, 'c' => N]]]` with **macros per 100 g** (`p` proteine, `g` grassi, `c` carboidrati). Keys and category/food names must match exactly between PHP and the inline JS in [nuova.php](nuova.php).
+- [style.css](style.css) — all styling. No `<style>` block in any PHP page.
+- `data/alimenti.json` — library (committed). Source of truth, edited via [gestisci.php](gestisci.php).
+- `data/diario.json` — entry list (gitignored, auto-created by `salva_dati()` in [nuova.php](nuova.php)). Each entry stores its **computed** `kcal/proteine/grassi/carboidrati` so editing the library never retroactively changes historical entries.
 
 ### Conventions worth knowing
 
-- **`PASTI` constant** in [index.php](index.php) defines both the allowed meal types and their display order (used via `array_flip` to sort entries within a day).
-- **Schema tolerance**: the display path uses `?? ''` / `?? 0` everywhere because earlier test entries in `data/diario.json` may have an older schema (`alimenti` plural, no `categoria`/`grammi`/macros). Don't tighten these without migrating the file.
-- **Server is authoritative for macros**: the JS preview is cosmetic; `index.php` recomputes `kcal / proteine / grassi` from `grammi × library[categoria][alimento] / 100` on save. Don't accept client-supplied macro values.
+- **`PASTI` constant** is duplicated in [index.php](index.php) and [nuova.php](nuova.php) — change in both. It defines allowed meal types and their display order (used via `array_flip` to sort entries within a day).
+- **Schema tolerance**: the display path uses `?? ''` / `?? 0` everywhere because older entries in `data/diario.json` may lack newer keys (e.g. `carboidrati` was added later, and the very first test entries had `alimenti` plural, no `categoria`/`grammi`/macros). Don't tighten these without migrating the file.
+- **Server is authoritative for macros**: the JS preview in [nuova.php](nuova.php) is cosmetic; the PHP handler recomputes `kcal / proteine / grassi / carboidrati` from `grammi × library[categoria][alimento] / 100` on save. Don't accept client-supplied macro values.
 - **IDs**: `bin2hex(random_bytes(6))` — short opaque IDs, used only as a delete key.
+- **Header nav**: every page has a `<nav class="header-nav">` block linking to the other two pages. Keep it consistent if you add a 4th page.
