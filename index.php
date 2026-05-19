@@ -127,6 +127,7 @@ $libreria_json = json_encode($LIBRERIA, JSON_UNESCAPED_UNICODE);
 <header>
     <h1>Diario Alimentare Carnivoro</h1>
     <p>Categorie carnivore con macro precaricate · proteine, grassi, kcal</p>
+    <a href="gestisci.php" class="header-link">Gestisci libreria &rarr;</a>
 </header>
 
 <main>

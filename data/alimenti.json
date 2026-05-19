@@ -1,0 +1,331 @@
+{
+    "Carne rossa": {
+        "Manzo - bistecca ribeye": {
+            "kcal": 271,
+            "p": 25,
+            "g": 19
+        },
+        "Manzo - controfiletto": {
+            "kcal": 215,
+            "p": 28,
+            "g": 11
+        },
+        "Manzo - costata": {
+            "kcal": 280,
+            "p": 24,
+            "g": 21
+        },
+        "Manzo - macinato 20% grasso": {
+            "kcal": 254,
+            "p": 17,
+            "g": 20
+        },
+        "Manzo - filetto": {
+            "kcal": 197,
+            "p": 27,
+            "g": 10
+        },
+        "Manzo - tartare": {
+            "kcal": 196,
+            "p": 22,
+            "g": 12
+        },
+        "Maiale - lombata": {
+            "kcal": 242,
+            "p": 27,
+            "g": 14
+        },
+        "Maiale - pancetta": {
+            "kcal": 541,
+            "p": 37,
+            "g": 42
+        },
+        "Maiale - costine": {
+            "kcal": 277,
+            "p": 21,
+            "g": 21
+        },
+        "Agnello - costoletta": {
+            "kcal": 294,
+            "p": 25,
+            "g": 21
+        },
+        "Agnello - cosciotto": {
+            "kcal": 230,
+            "p": 28,
+            "g": 13
+        },
+        "Cavallo - tagliata": {
+            "kcal": 143,
+            "p": 22,
+            "g": 6
+        },
+        "Cinghiale": {
+            "kcal": 160,
+            "p": 28,
+            "g": 5
+        },
+        "Cervo": {
+            "kcal": 158,
+            "p": 30,
+            "g": 3
+        }
+    },
+    "Carne bianca": {
+        "Pollo - petto": {
+            "kcal": 165,
+            "p": 31,
+            "g": 3.6
+        },
+        "Pollo - coscia con pelle": {
+            "kcal": 209,
+            "p": 26,
+            "g": 11
+        },
+        "Pollo - ali": {
+            "kcal": 203,
+            "p": 30,
+            "g": 8
+        },
+        "Tacchino - petto": {
+            "kcal": 135,
+            "p": 30,
+            "g": 1
+        },
+        "Tacchino - coscia": {
+            "kcal": 213,
+            "p": 28,
+            "g": 11
+        },
+        "Coniglio": {
+            "kcal": 173,
+            "p": 33,
+            "g": 4
+        },
+        "Anatra - petto con pelle": {
+            "kcal": 337,
+            "p": 19,
+            "g": 28
+        }
+    },
+    "Pesce e frutti di mare": {
+        "Salmone": {
+            "kcal": 208,
+            "p": 20,
+            "g": 13
+        },
+        "Sgombro": {
+            "kcal": 205,
+            "p": 19,
+            "g": 14
+        },
+        "Sardine": {
+            "kcal": 208,
+            "p": 25,
+            "g": 11
+        },
+        "Tonno fresco": {
+            "kcal": 144,
+            "p": 23,
+            "g": 5
+        },
+        "Tonno in scatola al naturale": {
+            "kcal": 116,
+            "p": 26,
+            "g": 1
+        },
+        "Trota": {
+            "kcal": 148,
+            "p": 21,
+            "g": 7
+        },
+        "Merluzzo": {
+            "kcal": 82,
+            "p": 18,
+            "g": 0.7
+        },
+        "Branzino": {
+            "kcal": 97,
+            "p": 18,
+            "g": 2
+        },
+        "Orata": {
+            "kcal": 117,
+            "p": 20,
+            "g": 4
+        },
+        "Acciughe": {
+            "kcal": 131,
+            "p": 20,
+            "g": 5
+        },
+        "Gamberi": {
+            "kcal": 99,
+            "p": 24,
+            "g": 0.3
+        },
+        "Cozze": {
+            "kcal": 86,
+            "p": 12,
+            "g": 2
+        },
+        "Vongole": {
+            "kcal": 86,
+            "p": 15,
+            "g": 1
+        },
+        "Polpo": {
+            "kcal": 82,
+            "p": 15,
+            "g": 1
+        },
+        "Calamari": {
+            "kcal": 92,
+            "p": 16,
+            "g": 1.4
+        }
+    },
+    "Uova": {
+        "Uovo intero (gallina)": {
+            "kcal": 155,
+            "p": 13,
+            "g": 11
+        },
+        "Tuorlo": {
+            "kcal": 322,
+            "p": 16,
+            "g": 27
+        },
+        "Albume": {
+            "kcal": 52,
+            "p": 11,
+            "g": 0.2
+        },
+        "Uova di quaglia": {
+            "kcal": 158,
+            "p": 13,
+            "g": 11
+        }
+    },
+    "Frattaglie": {
+        "Fegato di manzo": {
+            "kcal": 135,
+            "p": 20,
+            "g": 4
+        },
+        "Fegato di pollo": {
+            "kcal": 119,
+            "p": 17,
+            "g": 5
+        },
+        "Cuore di manzo": {
+            "kcal": 112,
+            "p": 17,
+            "g": 4
+        },
+        "Cuore di pollo": {
+            "kcal": 153,
+            "p": 16,
+            "g": 9
+        },
+        "Rognone (rene) di manzo": {
+            "kcal": 99,
+            "p": 17,
+            "g": 3
+        },
+        "Cervello di vitello": {
+            "kcal": 143,
+            "p": 10,
+            "g": 10
+        },
+        "Midollo osseo": {
+            "kcal": 786,
+            "p": 7,
+            "g": 84
+        },
+        "Trippa": {
+            "kcal": 85,
+            "p": 12,
+            "g": 4
+        },
+        "Lingua di manzo": {
+            "kcal": 224,
+            "p": 16,
+            "g": 17
+        }
+    },
+    "Latticini": {
+        "Burro": {
+            "kcal": 717,
+            "p": 0.9,
+            "g": 81
+        },
+        "Ghee": {
+            "kcal": 900,
+            "p": 0,
+            "g": 100
+        },
+        "Parmigiano Reggiano": {
+            "kcal": 392,
+            "p": 36,
+            "g": 28
+        },
+        "Pecorino": {
+            "kcal": 387,
+            "p": 26,
+            "g": 31
+        },
+        "Grana Padano": {
+            "kcal": 384,
+            "p": 33,
+            "g": 28
+        },
+        "Mozzarella vaccina": {
+            "kcal": 254,
+            "p": 18,
+            "g": 19
+        },
+        "Mozzarella di bufala": {
+            "kcal": 288,
+            "p": 17,
+            "g": 24
+        },
+        "Ricotta vaccina": {
+            "kcal": 146,
+            "p": 9,
+            "g": 11
+        },
+        "Yogurt greco intero": {
+            "kcal": 97,
+            "p": 9,
+            "g": 5
+        },
+        "Panna fresca da montare": {
+            "kcal": 337,
+            "p": 2,
+            "g": 36
+        },
+        "Mascarpone": {
+            "kcal": 453,
+            "p": 5,
+            "g": 47
+        }
+    },
+    "Grassi animali": {
+        "Sego di manzo": {
+            "kcal": 902,
+            "p": 0,
+            "g": 100
+        },
+        "Strutto": {
+            "kcal": 902,
+            "p": 0,
+            "g": 100
+        },
+        "Lardo": {
+            "kcal": 891,
+            "p": 2,
+            "g": 99
+        }
+    }
+}
