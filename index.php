@@ -4,8 +4,6 @@ declare(strict_types=1);
 const DATA_FILE = __DIR__ . '/data/diario.json';
 const PASTI = ['Colazione', 'Spuntino mattina', 'Pranzo', 'Spuntino pomeriggio', 'Cena', 'Dopo cena'];
 
-$LIBRERIA = require __DIR__ . '/alimenti.php';
-
 function carica_dati(): array {
     if (!is_file(DATA_FILE)) return [];
     $raw = file_get_contents(DATA_FILE);
@@ -29,64 +27,16 @@ function strftime_it(string $data): string {
     return $giorni[(int)date('w', $ts)] . ' ' . (int)date('j', $ts) . ' ' . $mesi[(int)date('n', $ts) - 1] . ' ' . date('Y', $ts);
 }
 
-function trova_alimento(array $libreria, string $categoria, string $nome): ?array {
-    return $libreria[$categoria][$nome] ?? null;
-}
-
 $messaggio = '';
 $tipo_messaggio = '';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $azione = $_POST['azione'] ?? '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['azione'] ?? '') === 'elimina') {
+    $id = $_POST['id'] ?? '';
     $dati = carica_dati();
-
-    if ($azione === 'aggiungi') {
-        $categoria = trim((string)($_POST['categoria'] ?? ''));
-        $alimento  = trim((string)($_POST['alimento'] ?? ''));
-        $grammi    = (float)($_POST['grammi'] ?? 0);
-        $pasto     = trim((string)($_POST['pasto'] ?? ''));
-
-        $info = trova_alimento($LIBRERIA, $categoria, $alimento);
-
-        if (!in_array($pasto, PASTI, true)) {
-            $messaggio = 'Tipo di pasto non valido.';
-            $tipo_messaggio = 'errore';
-        } elseif ($info === null) {
-            $messaggio = 'Alimento non riconosciuto.';
-            $tipo_messaggio = 'errore';
-        } elseif ($grammi <= 0) {
-            $messaggio = 'Inserisci una quantità in grammi maggiore di zero.';
-            $tipo_messaggio = 'errore';
-        } else {
-            $fattore = $grammi / 100.0;
-            $voce = [
-                'id'        => bin2hex(random_bytes(6)),
-                'data'      => $_POST['data'] ?? date('Y-m-d'),
-                'pasto'     => $pasto,
-                'categoria' => $categoria,
-                'alimento'  => $alimento,
-                'grammi'    => round($grammi, 1),
-                'kcal'      => (int)round($info['kcal'] * $fattore),
-                'proteine'  => round($info['p'] * $fattore, 1),
-                'grassi'    => round($info['g'] * $fattore, 1),
-                'note'      => trim((string)($_POST['note'] ?? '')),
-                'creato_il' => date('c'),
-            ];
-            $dati[] = $voce;
-            salva_dati($dati);
-            $messaggio = 'Voce aggiunta al diario.';
-            $tipo_messaggio = 'ok';
-        }
-    } elseif ($azione === 'elimina') {
-        $id = $_POST['id'] ?? '';
-        $dati = array_values(array_filter($dati, fn($v) => ($v['id'] ?? '') !== $id));
-        salva_dati($dati);
-        $messaggio = 'Voce eliminata.';
-        $tipo_messaggio = 'ok';
-    }
-
+    $dati = array_values(array_filter($dati, fn($v) => ($v['id'] ?? '') !== $id));
+    salva_dati($dati);
     header('Location: index.php?giorno=' . urlencode($_POST['data'] ?? date('Y-m-d'))
-         . '&msg=' . urlencode($messaggio) . '&tipo=' . urlencode($tipo_messaggio));
+         . '&msg=' . urlencode('Voce eliminata.') . '&tipo=ok');
     exit;
 }
 
@@ -111,8 +61,6 @@ foreach ($voci_giorno as $v) {
     $tot_grass += (float)($v['grassi'] ?? 0);
 }
 $rapporto_pg = $tot_grass > 0 ? round($tot_prot / $tot_grass, 2) : null;
-
-$libreria_json = json_encode($LIBRERIA, JSON_UNESCAPED_UNICODE);
 ?>
 <!DOCTYPE html>
 <html lang="it">
@@ -127,61 +75,21 @@ $libreria_json = json_encode($LIBRERIA, JSON_UNESCAPED_UNICODE);
 <header>
     <h1>Diario Alimentare Carnivoro</h1>
     <p>Categorie carnivore con macro precaricate · proteine, grassi, kcal</p>
-    <a href="gestisci.php" class="header-link">Gestisci libreria &rarr;</a>
+    <nav class="header-nav">
+        <a href="nuova.php?giorno=<?= htmlspecialchars($filtro_data, ENT_QUOTES) ?>" class="header-link header-link-primary">+ Nuova voce</a>
+        <a href="gestisci.php" class="header-link">Gestisci libreria &rarr;</a>
+    </nav>
 </header>
 
-<main>
+<main class="single">
     <section class="card">
-        <h2>Nuova voce</h2>
+        <h2>Giornata</h2>
+
         <?php if ($messaggio !== ''): ?>
             <div class="msg <?= htmlspecialchars($tipo_messaggio, ENT_QUOTES) ?>">
                 <?= htmlspecialchars($messaggio, ENT_QUOTES) ?>
             </div>
         <?php endif; ?>
-        <form method="post" action="index.php" id="form-voce">
-            <input type="hidden" name="azione" value="aggiungi">
-
-            <label for="data">Data</label>
-            <input type="date" id="data" name="data" value="<?= htmlspecialchars($filtro_data, ENT_QUOTES) ?>" required>
-
-            <label for="pasto">Pasto</label>
-            <select id="pasto" name="pasto" required>
-                <?php foreach (PASTI as $p): ?>
-                    <option value="<?= htmlspecialchars($p, ENT_QUOTES) ?>"><?= htmlspecialchars($p, ENT_QUOTES) ?></option>
-                <?php endforeach; ?>
-            </select>
-
-            <label for="categoria">Categoria</label>
-            <select id="categoria" name="categoria" required>
-                <option value="">-- scegli categoria --</option>
-                <?php foreach (array_keys($LIBRERIA) as $cat): ?>
-                    <option value="<?= htmlspecialchars($cat, ENT_QUOTES) ?>"><?= htmlspecialchars($cat, ENT_QUOTES) ?></option>
-                <?php endforeach; ?>
-            </select>
-
-            <label for="alimento">Alimento</label>
-            <select id="alimento" name="alimento" required disabled>
-                <option value="">-- prima scegli la categoria --</option>
-            </select>
-
-            <label for="grammi">Quantità (g)</label>
-            <input type="number" id="grammi" name="grammi" min="1" max="3000" step="1" placeholder="es. 200" required>
-
-            <div class="preview" id="preview">
-                <b>Valori stimati:</b> <span id="prev-kcal">—</span> kcal ·
-                <span id="prev-prot">—</span> g prot ·
-                <span id="prev-grass">—</span> g grassi
-            </div>
-
-            <label for="note">Note (opzionale)</label>
-            <textarea id="note" name="note" placeholder="Es. cottura al sangue, post allenamento"></textarea>
-
-            <button type="submit" class="btn-primary">Aggiungi al diario</button>
-        </form>
-    </section>
-
-    <section class="card">
-        <h2>Giornata</h2>
 
         <form method="get" action="index.php" class="day-picker">
             <label for="giorno">Visualizza giorno</label>
@@ -220,7 +128,10 @@ $libreria_json = json_encode($LIBRERIA, JSON_UNESCAPED_UNICODE);
         </div>
 
         <?php if (empty($voci_giorno)): ?>
-            <div class="empty">Nessuna voce per questa giornata.</div>
+            <div class="empty">
+                Nessuna voce per questa giornata.<br>
+                <a href="nuova.php?giorno=<?= htmlspecialchars($filtro_data, ENT_QUOTES) ?>" class="btn-link" style="margin-top:.75rem;display:inline-block">+ Aggiungi la prima voce</a>
+            </div>
         <?php else: ?>
             <?php
                 $raggruppati = [];
@@ -276,64 +187,6 @@ $libreria_json = json_encode($LIBRERIA, JSON_UNESCAPED_UNICODE);
         <?php endif; ?>
     </section>
 </main>
-
-<script>
-const LIBRERIA = <?= $libreria_json ?>;
-
-const selCategoria = document.getElementById('categoria');
-const selAlimento  = document.getElementById('alimento');
-const inpGrammi    = document.getElementById('grammi');
-const preview      = document.getElementById('preview');
-const prevKcal     = document.getElementById('prev-kcal');
-const prevProt     = document.getElementById('prev-prot');
-const prevGrass    = document.getElementById('prev-grass');
-
-function popolaAlimenti() {
-    const cat = selCategoria.value;
-    selAlimento.innerHTML = '';
-    if (!cat || !LIBRERIA[cat]) {
-        selAlimento.disabled = true;
-        const opt = document.createElement('option');
-        opt.value = '';
-        opt.textContent = '-- prima scegli la categoria --';
-        selAlimento.appendChild(opt);
-        return;
-    }
-    selAlimento.disabled = false;
-    const optDefault = document.createElement('option');
-    optDefault.value = '';
-    optDefault.textContent = '-- scegli alimento --';
-    selAlimento.appendChild(optDefault);
-    for (const nome of Object.keys(LIBRERIA[cat])) {
-        const info = LIBRERIA[cat][nome];
-        const opt = document.createElement('option');
-        opt.value = nome;
-        opt.textContent = nome + ' (' + info.kcal + ' kcal / 100g)';
-        selAlimento.appendChild(opt);
-    }
-    aggiornaAnteprima();
-}
-
-function aggiornaAnteprima() {
-    const cat  = selCategoria.value;
-    const nome = selAlimento.value;
-    const g    = parseFloat(inpGrammi.value || '0');
-    if (!cat || !nome || !LIBRERIA[cat] || !LIBRERIA[cat][nome] || !g) {
-        preview.classList.remove('visible');
-        return;
-    }
-    const info = LIBRERIA[cat][nome];
-    const f = g / 100;
-    prevKcal.textContent  = Math.round(info.kcal * f);
-    prevProt.textContent  = (info.p * f).toFixed(1);
-    prevGrass.textContent = (info.g * f).toFixed(1);
-    preview.classList.add('visible');
-}
-
-selCategoria.addEventListener('change', popolaAlimenti);
-selAlimento.addEventListener('change', aggiornaAnteprima);
-inpGrammi.addEventListener('input', aggiornaAnteprima);
-</script>
 
 </body>
 </html>

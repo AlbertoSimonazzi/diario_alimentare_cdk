@@ -36,9 +36,7 @@ main {
     grid-template-columns: 1fr;
     gap: 1.5rem;
 }
-@media (min-width: 820px) {
-    main { grid-template-columns: 380px 1fr; }
-}
+main.single { max-width: 720px; }
 .card {
     background: var(--card);
     border: 1px solid var(--border);
@@ -192,24 +190,53 @@ button {
 .day-title { font-size: .95rem; margin-bottom: .5rem; color: var(--muted); }
 
 /* --- Header link & toolbar --- */
+.header-nav {
+    display: flex;
+    gap: .5rem;
+    flex-wrap: wrap;
+    margin-top: .75rem;
+}
 .header-link {
     display: inline-block;
-    margin-top: .5rem;
     color: #fff;
     background: rgba(255,255,255,.15);
-    padding: .3rem .7rem;
+    padding: .35rem .8rem;
     border-radius: 4px;
-    font-size: .85rem;
+    font-size: .9rem;
     text-decoration: none;
+    border: 1px solid rgba(255,255,255,.15);
+    transition: background .15s;
 }
 .header-link:hover { background: rgba(255,255,255,.28); }
+.header-link-primary {
+    background: #fff;
+    color: var(--primary);
+    font-weight: 600;
+    border-color: #fff;
+}
+.header-link-primary:hover {
+    background: #faf6f0;
+    color: var(--primary-dark);
+}
 
 /* --- Pagina gestisci --- */
 main.gestisci {
     max-width: 980px;
     grid-template-columns: 1fr;
 }
-.toolbar { margin: 0; }
+
+/* --- Bottoni form (Annulla / Invia) --- */
+.form-buttons {
+    display: flex;
+    gap: .5rem;
+    align-items: center;
+    margin-top: 1rem;
+}
+.form-buttons .btn-primary { margin-top: 0; flex: 1; }
+.form-buttons .btn-link {
+    text-align: center;
+    padding: .6rem 1rem;
+}
 .btn-link {
     display: inline-block;
     color: var(--primary);

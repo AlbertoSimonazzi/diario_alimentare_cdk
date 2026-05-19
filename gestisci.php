@@ -163,12 +163,13 @@ function h(string $s): string {
 <header>
     <h1>Gestione libreria alimenti</h1>
     <p>Aggiungi, modifica ed elimina categorie e alimenti. Valori per 100 g.</p>
+    <nav class="header-nav">
+        <a href="index.php" class="header-link">&larr; Torna al diario</a>
+        <a href="nuova.php" class="header-link header-link-primary">+ Nuova voce</a>
+    </nav>
 </header>
 
 <main class="gestisci">
-    <div class="toolbar">
-        <a href="index.php" class="btn-link">&larr; Torna al diario</a>
-    </div>
 
     <?php if ($messaggio !== ''): ?>
         <div class="msg <?= h($tipo_messaggio) ?>">
